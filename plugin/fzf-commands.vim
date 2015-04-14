@@ -1,6 +1,4 @@
 
-let s:default_tmux_height = '40%'
-
 function! s:buflist()
   redir => ls
   silent ls
@@ -15,9 +13,9 @@ endfunction
 function! FZFBuffers()
     call fzf#run({
         \ 'source':  reverse(<sid>buflist()),
-        \ 'sink':    'edit',
+        \ 'sink':    function('<sid>bufopen'),
         \ 'options': '+m',
-        \ 'down':    '40%',
+        \ 'down':    len(<sid>buflist()) + 2
         \ })
 endfunction
 command! FZFBuffers call FZFBuffers()
@@ -28,7 +26,7 @@ function! FZFMru()
         \ 'source':   v:oldfiles,
         \ 'sink' :   'edit',
         \ 'options': '-m --no-sort',
-        \ 'down':    '40%',
+        \ 'down':    '40%'
         \ })
 endfunction
 command! FZFMru call FZFMru()
@@ -37,14 +35,13 @@ command! FZFMru call FZFMru()
 function! FZFGit()
     " Remove trailing new line to make it work with tmux splits
     let directory = substitute(system('git rev-parse --show-toplevel'), '\n$', '', '')
-    echo 'asdf'
     if !v:shell_error
         lcd `=directory`
         call fzf#run({
             \ 'sink': 'edit',
             \ 'dir': directory,
             \ 'source': 'git ls-files',
-            \ 'down': '40%',
+            \ 'down': '40%'
             \ })
     else
         FZF
