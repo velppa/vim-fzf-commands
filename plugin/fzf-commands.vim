@@ -10,16 +10,12 @@ function! s:bufopen(e)
   execute 'buffer' matchstr(a:e, '^[ 0-9]*')
 endfunction
 
-function! FZFBuffers()
-    call fzf#run({
+command! FZFBuffers call fzf#run({
         \ 'source':  reverse(<sid>buflist()),
         \ 'sink':    function('<sid>bufopen'),
         \ 'options': '+m',
         \ 'down':    len(<sid>buflist()) + 2
         \ })
-endfunction
-command! FZFBuffers call FZFBuffers()
-
 
 function! FZFMru()
     call fzf#run({
